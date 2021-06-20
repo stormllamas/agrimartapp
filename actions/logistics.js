@@ -167,17 +167,6 @@ export const setKeywords = text => async dispatch => {
     payload: text,
   })
 }
-export const updateQuery = history => async (dispatch, getState) => {
-  let categoryPath = '', brandPath = '', keywordsPath = ''
-  const { categoryFilter, sellerFilter, keywordsFilter } = getState().logistics;
-
-  // Set Paths
-  if (categoryFilter.length > 0) categoryFilter.sort().forEach((c,i) => i === 0 ? categoryPath += `&category=${c.replaceAll(' ', '-')}` : categoryPath += `--${c.replaceAll(' ', '-')}`)
-  if (sellerFilter.length > 0) sellerFilter.sort().forEach((c,i) => i === 0 ? brandPath += `&brand=${c.replaceAll(' ', '-')}` : brandPath += `--${c.replaceAll(' ', '-')}`)
-  if (keywordsFilter) keywordsPath = `&keywords=${keywordsFilter.replaceAll(' ', '-')}`
-
-  history.push({ search: `?${keywordsPath}${categoryPath}${brandPath}`})
-}
 
 // CURRENT ORDER
 export const getCurrentOrder = ({ query, updateOnly }) => async (dispatch, getState) => {
@@ -285,10 +274,6 @@ export const checkout = ({ formData, navigation }) => async (dispatch, getState)
         "Error",
         res.data.msg,
         [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
           { text: "OK" }
         ]
       );
@@ -318,6 +303,7 @@ export const proceedWithCOD = ({ navigation, socket }) => async (dispatch, getSt
 
   try {
     const res = await axios.get(`${PROJECT_URL}/api/current_order/?for_checkout=true`, tokenConfig(getState))
+    console.log(res.data)
     if (res.data.has_valid_item === true) {
       await axios.put(`${PROJECT_URL}/api/complete_order/1/`, null, tokenConfig(getState))
       dispatch({ type: COMPLETE_ORDER_SUCCESS });
@@ -325,10 +311,6 @@ export const proceedWithCOD = ({ navigation, socket }) => async (dispatch, getSt
         "Success",
         "Order Booked!",
         [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
           { text: "OK" }
         ]
       );
@@ -338,16 +320,12 @@ export const proceedWithCOD = ({ navigation, socket }) => async (dispatch, getSt
       dispatch({ type: COMPLETE_ORDER_FAILED });
       Alert.alert(
         "Error",
-        res.data.msg,
+        'Payment error. Stocks may have changed. Please Try again.',
         [
-          {
-            text: "Cancel",
-            style: "cancel"
-          },
           { text: "OK" }
         ]
       );
-      navigation.navigate('Bookings')
+      navigation.navigate('Root', { screen: 'Products'})
     }
   } catch (err) {
     console.log(err)
@@ -356,10 +334,6 @@ export const proceedWithCOD = ({ navigation, socket }) => async (dispatch, getSt
       "Error",
       "Something went wrong. Please try again",
       [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
         { text: "OK" }
       ]
     );

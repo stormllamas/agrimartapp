@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import { GOOGLE_API_KEY, PROJECT_URL } from "../../actions/siteConfig"
 
-import { Icon, Text, Button, TopNavigationAction, Input, IndexPath, Select, SelectItem, TopNavigation, Spinner, Divider } from '@ui-kitten/components';
+import { Icon, Text, Button, TopNavigation, TopNavigationAction, Input, IndexPath, Select, SelectItem, Spinner, Divider } from '@ui-kitten/components';
 import { Animated, Easing, Alert, Dimensions, View, TouchableHighlight, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native'
 
 import Collapsible from 'react-native-collapsible';
